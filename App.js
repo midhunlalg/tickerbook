@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import AddTradeScreen from './screens/TradeScreen';
 import TradeHistoryScreen from './screens/TradeHistory';
 import { NavigationContainer } from '@react-navigation/native';
@@ -7,6 +7,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback, useEffect, useState } from 'react';
+import * as DevClient from 'expo-dev-client';
+import mobileAds from 'react-native-google-mobile-ads';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,6 +17,12 @@ SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
+
+  mobileAds()
+    .initialize()
+    .then(adapterStatuses => {
+
+    });
 
   useEffect(() => {
     async function prepare() {
@@ -31,6 +39,14 @@ export default function App() {
     prepare();
   }, []);
 
+  // useEffect(() => {
+  //   mobileAds()
+  //     .initialize()
+  //     .then(adapterStatuses => {
+  //       Alert.alert(adapterStatuses);
+  //     });
+  // }, []);
+
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
       await SplashScreen.hideAsync();
@@ -43,7 +59,6 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container} onLayout={onLayoutRootView}>
-      {/* <TradeHistoryScreen></TradeHistoryScreen> */}
       <NavigationContainer>
         <Stack.Navigator initialRouteName="TradeHistory">
           <Stack.Screen

@@ -16,6 +16,10 @@ import { Ionicons } from '@expo/vector-icons';
 import TradeScreen from './TradeScreen';
 import { ToastAndroid, Platform } from 'react-native';
 
+import { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
+// const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy';
+const adUnitId = TestIds.ADAPTIVE_BANNER;
+
 const TradeHistoryScreen = () => {
     const [trades, setTrades] = useState([]);
     const [sortBy, setSortBy] = useState('stock');
@@ -65,23 +69,53 @@ const TradeHistoryScreen = () => {
 
     const calculateStats = (trades) => {
         let totalQty = 0;
+        let totalBuyQty = 0;
+        let totalSellQty = 0;
         let totalInvested = 0;
-        let avgPrice = 0;
+        let totalSellValue = 0;
+        let avgBuyPrice = 0;
+        let avgSellPrice = 0;
         let pnl = 0;
+        let totalBuyPrice = 0;
+        let totalSellPrice = 0;
+
         trades.forEach((t) => {
             const qty = parseFloat(t.quantity);
             const price = parseFloat(t.price);
             if (t.type === 'Buy') {
                 totalInvested += qty * price;
-                totalQty += qty;
-                pnl -= qty * price;
+                // totalQty += qty;
+                totalBuyQty += qty;
+                totalBuyPrice += qty * price;
+                avgBuyPrice = totalBuyQty > 0 ? (totalInvested / totalBuyQty).toFixed(2) : 0;
+
             } else if (t.type === 'Sell') {
-                totalQty -= qty;
-                pnl += qty * price;
+                totalSellValue += qty * price;
+                // if (totalBuyQty === 0)
+                //totalQty -= qty;
+                totalSellQty += qty;
+                totalSellPrice += qty * price;
+                avgSellPrice = totalSellQty > 0 ? (totalSellValue / totalSellQty).toFixed(2) : 0;
             }
         });
-        avgPrice = totalQty > 0 ? (totalInvested / totalQty).toFixed(2) : 0;
-        return { totalQty, avgPrice, totalInvested, pnl };
+
+        if (totalBuyQty >= totalSellQty)
+            totalQty = totalBuyQty - totalSellQty;
+        else
+            totalQty = totalSellQty - totalBuyQty;
+
+
+        totalQty = totalBuyQty >= totalSellQty ? totalBuyQty : totalSellQty;
+
+        totalInvested = totalQty * avgBuyPrice;
+        console.log('totalInvested :', totalInvested)
+        if (totalInvested === 0)
+            totalInvested = totalQty * avgSellPrice;
+
+        if (totalBuyQty > 0 && totalSellPrice > 0)
+            pnl = (totalSellQty * avgSellPrice) - (totalSellQty * avgBuyPrice);
+
+        return { totalQty, avgBuyPrice, avgSellPrice, totalInvested, pnl };
     };
 
     const showToast = (msg) => {
@@ -172,7 +206,8 @@ const TradeHistoryScreen = () => {
                     <Text style={styles.stock}>{stock}</Text>
                     <Text style={styles.detail}>Qty: {stats.totalQty}</Text>
                 </View>
-                <Text style={styles.detail}>Avg Buy Price: ₹{stats.avgPrice}</Text>
+                <Text style={styles.detail}>Avg Buy Price: ₹{stats.avgBuyPrice}</Text>
+                <Text style={styles.detail}>Avg Sell Price: ₹{stats.avgSellPrice}</Text>
                 <Text style={styles.detail}>Total Invested: ₹{stats.totalInvested.toFixed(2)}</Text>
                 <Text style={[styles.detail, { color: stats.pnl >= 0 ? '#4CAF50' : '#F44336' }]}>P/L: ₹{stats.pnl.toFixed(2)}</Text>
             </TouchableOpacity>
@@ -219,6 +254,11 @@ const TradeHistoryScreen = () => {
 
     return (
         <SafeAreaView style={styles.container}>
+            {/* Ad Space */}
+            <View style={styles.adBanner}>
+                <Text style={{ color: '#999' }}>-- Ad Placeholder --</Text>
+                <BannerAd unitId={adUnitId} size={BannerAdSize.LARGE_BANNER} />
+            </View>
             {!selectedStock ? (
                 <>
                     <Text style={styles.title}>Trade Summary</Text>
@@ -297,11 +337,22 @@ const styles = StyleSheet.create({
         backgroundColor: '#F1F3F6',
         padding: 16,
     },
+    adBanner: {
+        // Remove the fixed height!
+        // height: 50,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderBottomColor: '#D3D3D3',
+        borderWidth: .5,
+        padding: 2,
+    },
     title: {
         fontSize: 22,
         fontWeight: '700',
         color: '#3A4D8F',
         marginBottom: 12,
+        marginTop: 5,
     },
     searchInput: {
         backgroundColor: '#fff',

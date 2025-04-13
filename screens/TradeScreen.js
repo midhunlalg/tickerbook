@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
     View,
     Text,
@@ -57,7 +57,7 @@ const TradeScreen = ({ onModalClosefunc }) => {
     }, []);
 
     const onStockInputChange = (text) => {
-        setStockName(text);
+        setStockName(text.toUpperCase());
         if (text.length > 0) {
             const matches = allStockNames.filter((s) =>
                 s.toLowerCase().startsWith(text.toLowerCase())
@@ -68,7 +68,6 @@ const TradeScreen = ({ onModalClosefunc }) => {
             setShowSuggestions(false);
         }
     };
-
 
     const selectStock = (name) => {
         setStockName(name);
@@ -91,7 +90,7 @@ const TradeScreen = ({ onModalClosefunc }) => {
 
         const trade = {
             id: Date.now().toString(),
-            stockName,
+            stockName: stockName.toUpperCase(),
             type: isBuy ? 'Buy' : 'Sell',
             price: parseFloat(price),
             quantity: parseInt(quantity),
@@ -125,15 +124,11 @@ const TradeScreen = ({ onModalClosefunc }) => {
 
     return (
         <View style={styles.container}>
-            {/* Ad Space */}
-            <View style={styles.adBanner}>
-                <Text style={{ color: '#999' }}>-- Ad Placeholder --</Text>
-            </View>
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
                     <Text style={styles.label}>Search Stock</Text>
                     <TextInput
-                        value={stockName}
+                        value={stockName.toUpperCase()}
                         // onChangeText={setStockName}
                         onChangeText={onStockInputChange}
                         style={styles.input}
@@ -152,7 +147,7 @@ const TradeScreen = ({ onModalClosefunc }) => {
                                     }}
                                     style={styles.suggestionItem}
                                 >
-                                    <Text>{item}</Text>
+                                    <Text>{item.toUpperCase()}</Text>
                                 </Pressable>
                             )}
                             style={styles.suggestionList}
@@ -275,12 +270,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         //padding: 20,
     },
-    adBanner: {
-        height: 50,
-        backgroundColor: '#e0e0e0',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
+
 
     strategyToggle: {
         flexDirection: 'row',
