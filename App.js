@@ -8,7 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback, useEffect, useState } from 'react';
 import * as DevClient from 'expo-dev-client';
-import mobileAds from 'react-native-google-mobile-ads';
+import mobileAds, { NativeAsset } from 'react-native-google-mobile-ads';
 
 const Stack = createNativeStackNavigator();
 
@@ -59,6 +59,7 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container} onLayout={onLayoutRootView}>
+
       <NavigationContainer>
         <Stack.Navigator initialRouteName="TradeHistory">
           <Stack.Screen
