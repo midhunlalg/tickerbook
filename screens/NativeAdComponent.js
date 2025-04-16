@@ -49,17 +49,23 @@ const NativeAdComponent = () => {
             )} */}
 
             {/* NativeMediaView doesn't need an Image inside */}
-            <NativeMediaView style={{ width: '100%', height: '100', borderRadius: 8, marginVertical: 10, }} resizeMode={'contain'} />
+            <NativeMediaView style={{
+                width: "100%", // or a fixed width if you want it centered
+                height: 125,
+                borderRadius: 8,
+                marginVertical: 10,
+                alignSelf: 'center', // this centers it horizontally
+            }} resizeMode={'contain'} />
 
             <NativeAsset assetType={NativeAssetType.HEADLINE}>
-                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
+                <Text style={{ fontSize: 18, alignSelf: 'center', fontWeight: 'bold' }}>
                     {nativeAd.headline}
                 </Text>
             </NativeAsset>
             <NativeAsset assetType={NativeAssetType.CALL_TO_ACTION}>
-                <Text style={{ color: 'white' }} >{nativeAd.callToAction}</Text>
+                <Text style={{ alignSelf: 'center', color: 'white' }} >{nativeAd.callToAction}</Text>
             </NativeAsset>
-            <Text style={{ color: 'white', fontSize: 12, textAlign: 'left', alignSelf: 'flex-start' }}>
+            <Text style={{ color: 'white', fontSize: 12, textAlign: 'left', alignSelf: 'flex-start', paddingLeft: 10, }}>
                 Sponsored
             </Text>
         </NativeAdView>

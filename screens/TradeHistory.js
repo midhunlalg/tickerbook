@@ -343,12 +343,12 @@ const styles = StyleSheet.create({
         // Remove the fixed height!
         // height: 50,
 
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
+        // width: '100%',
+        //  justifyContent: 'center',
+        // alignItems: 'center',
         // borderBottomColor: '#D3D3D3',
         //  borderWidth: .5,
-        padding: 2,
+        //padding: 2,
         borderRadius: 15,
         backgroundColor: "#34796B",
     },
