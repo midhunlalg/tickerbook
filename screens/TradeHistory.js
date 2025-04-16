@@ -17,6 +17,7 @@ import TradeScreen from './TradeScreen';
 import { ToastAndroid, Platform } from 'react-native';
 
 import { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
+import NativeAdComponent from './NativeAdComponent';
 // const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy';
 const adUnitId = TestIds.ADAPTIVE_BANNER;
 
@@ -256,8 +257,9 @@ const TradeHistoryScreen = () => {
         <SafeAreaView style={styles.container}>
             {/* Ad Space */}
             <View style={styles.adBanner}>
-                <Text style={{ color: '#999' }}>-- Ad Placeholder --</Text>
-                <BannerAd unitId={adUnitId} size={BannerAdSize.LARGE_BANNER} />
+                {/* <Text style={{ color: '#999' }}>-- Ad Placeholder--</Text> */}
+                {/* <BannerAd unitId={adUnitId} size={BannerAdSize.LARGE_BANNER} /> */}
+                <NativeAdComponent></NativeAdComponent>
             </View>
             {!selectedStock ? (
                 <>
@@ -340,12 +342,15 @@ const styles = StyleSheet.create({
     adBanner: {
         // Remove the fixed height!
         // height: 50,
+
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
-        borderBottomColor: '#D3D3D3',
-        borderWidth: .5,
+        // borderBottomColor: '#D3D3D3',
+        //  borderWidth: .5,
         padding: 2,
+        borderRadius: 15,
+        backgroundColor: "#34796B",
     },
     title: {
         fontSize: 22,
